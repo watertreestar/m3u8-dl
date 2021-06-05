@@ -74,8 +74,6 @@ func NewTask(output string, url string) (*Downloader, error) {
 // Use goroutine to download parallel
 func (d *Downloader) Start(concurrency int) error {
 	var wg sync.WaitGroup
-	// struct{} zero size
-	//limitChan := make(chan struct{}, concurrency)
 	for {
 		tsIdx, end, err := d.next()
 		if err != nil {
@@ -94,9 +92,7 @@ func (d *Downloader) Start(concurrency int) error {
 					fmt.Printf(err.Error())
 				}
 			}
-			// <-limitChan
 		}(tsIdx)
-		// limitChan <- struct{}{}
 	}
 	wg.Wait()
 	if err := d.merge(); err != nil {
